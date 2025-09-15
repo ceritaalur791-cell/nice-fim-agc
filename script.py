@@ -64,7 +64,7 @@ for feed_url in FEEDS:
         write_post(title, summary, link, published)
 
 # ==============================
-# Buat index artikel (posts/index.html) dari template
+# Buat index artikel (posts/index.html) langsung card grid
 # ==============================
 def build_index():
     cards = []
@@ -79,26 +79,38 @@ def build_index():
             title = p.stem
         cards.append(f'<div class="card"><a href="{p.name}">{title}</a></div>')
 
-    # baca template
-    template_path = POSTS_DIR / "index.html"
-    if template_path.exists():
-        template = template_path.read_text(encoding="utf-8")
-        html = template.replace("{{ARTICLES}}", "\n".join(cards))
-        template_path.write_text(html, encoding="utf-8")
-    else:
-        # fallback kalau template belum ada
-        lis = "\n".join([f'<li><a href="{n}">{t}</a></li>' for n, t in cards])
-        html = f"""<!doctype html>
+    # Buat file index.html final (langsung berisi cards)
+    html = f"""<!doctype html>
 <html>
-  <head><meta charset="utf-8"><title>Artikel Film</title></head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <title>Artikel Film Terbaru</title>
+  <style>
+    body {{ font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }}
+    header {{ background: #1e1e1e; color: white; padding: 15px; text-align: center; }}
+    header a {{ color: #fff; text-decoration: none; font-weight: bold; }}
+    .container {{ max-width: 1000px; margin: 20px auto; padding: 20px; }}
+    h1 {{ color: #333; margin-bottom: 20px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }}
+    .card {{ background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: transform .2s; }}
+    .card:hover {{ transform: translateY(-5px); }}
+    .card a {{ text-decoration: none; color: #007bff; font-weight: bold; }}
+    .card a:hover {{ text-decoration: underline; }}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../index.html">⬅ Kembali ke Home</a>
+  </header>
+
+  <div class="container">
     <h1>Artikel Film Terbaru</h1>
-    <ul>
-      {lis}
-    </ul>
-    <p><a href="../index.html">⬅ Kembali ke Home</a></p>
-  </body>
+    <div class="grid">
+      {''.join(cards)}
+    </div>
+  </div>
+</body>
 </html>"""
-        template_path.write_text(html, encoding="utf-8")
+    (POSTS_DIR / "index.html").write_text(html, encoding="utf-8")
 
 build_index()
