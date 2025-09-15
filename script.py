@@ -15,11 +15,11 @@ POSTS_DIR = Path("posts")
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # ==============================
-# Fungsi slugify (perbaikan regex error)
+# Fungsi slugify (FIX regex)
 # ==============================
 def slugify(title: str, link: str) -> str:
-    # Hapus karakter aneh, hanya izinkan huruf/angka/spasi/dash
-    base = re.sub(r"[^-a-zA-Z0-9 ]+", "", title) \
+    # Hapus karakter aneh, hanya izinkan huruf/angka/spasi
+    base = re.sub(r"[^a-zA-Z0-9 ]+", "", title) \
              .strip() \
              .lower() \
              .replace(" ", "-")
@@ -51,17 +51,17 @@ def write_post(title, summary, link, published):
     return True
 
 # ==============================
-# Loop: ambil artikel dari setiap feed
+# Loop: ambil artikel dari setiap feed (FIX .get())
 # ==============================
 for feed_url in FEEDS:
     d = feedparser.parse(feed_url)
     for e in d.entries[:3]:  # ambil maksimal 3 artikel terbaru
-        write_post(
-            e.get("title", "Tanpa Judul"),
-            e.get("summary", ""),
-            e.get("link", "#"),
-            e.get("published", "")
-        )
+        title = getattr(e, "title", "Tanpa Judul")
+        summary = getattr(e, "summary", "")
+        link = getattr(e, "link", "#")
+        published = getattr(e, "published", "")
+
+        write_post(title, summary, link, published)
 
 # ==============================
 # Buat index artikel (posts/index.html)
