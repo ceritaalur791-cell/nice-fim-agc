@@ -1,0 +1,27 @@
+name: Auto Generate Film Posts
+
+on:
+  workflow_dispatch:   # bisa manual run
+  schedule:
+    - cron: "0 */6 * * *"   # auto jalan tiap 6 jam
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install feedparser
+      - name: Run generator
+        run: python script.py
+      - name: Commit & Push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Auto update film posts" || echo "No changes"
+          git push
