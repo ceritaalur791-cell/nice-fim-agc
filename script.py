@@ -11,7 +11,7 @@ POSTS_DIR = Path("posts")
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
 
 def slugify(title: str, link: str) -> str:
-    base = re.sub(r"[^a-zA-Z0-9\\- ]+", "", title).strip().lower().replace(" ", "-")
+    base = re.sub(r"[^a-zA-Z0-9- ]+", "", title).strip().lower().replace(" ", "-")
     short = hashlib.sha1(link.encode()).hexdigest()[:8]
     return f"{base}-{short}"
 
