@@ -39,8 +39,8 @@ def write_post(title, summary, link, published):
     html = f"""<!doctype html>
 <html>
   <head><meta charset="utf-8"><title>{title}</title></head>
-  <body>
-    <a href="../index.html">⬅ Kembali ke Home</a>
+  <body style="font-family: Arial, sans-serif; background: #f9f9f9; color:#333; padding:20px;">
+    <a href="../index.html">⬅ Kembali ke Home</a> | <a href="index.html">📂 Artikel</a>
     <h1>{title}</h1>
     <p><i>{published or ''}</i></p>
     <div>{summary}</div>
@@ -51,7 +51,7 @@ def write_post(title, summary, link, published):
     return True
 
 # ==============================
-# Loop: ambil artikel dari setiap feed (FIX .get())
+# Loop: ambil artikel dari setiap feed
 # ==============================
 for feed_url in FEEDS:
     d = feedparser.parse(feed_url)
@@ -64,10 +64,10 @@ for feed_url in FEEDS:
         write_post(title, summary, link, published)
 
 # ==============================
-# Buat index artikel (posts/index.html)
+# Buat index artikel (posts/index.html) dari template
 # ==============================
 def build_index():
-    items = []
+    cards = []
     for p in POSTS_DIR.glob("*.html"):
         if p.name == "index.html":
             continue
@@ -77,10 +77,18 @@ def build_index():
             title = m.group(1).strip() if m else p.stem
         except Exception:
             title = p.stem
-        items.append((p.name, title))
+        cards.append(f'<div class="card"><a href="{p.name}">{title}</a></div>')
 
-    lis = "\n".join([f'<li><a href="{n}">{t}</a></li>' for n, t in items])
-    html = f"""<!doctype html>
+    # baca template
+    template_path = POSTS_DIR / "index.html"
+    if template_path.exists():
+        template = template_path.read_text(encoding="utf-8")
+        html = template.replace("{{ARTICLES}}", "\n".join(cards))
+        template_path.write_text(html, encoding="utf-8")
+    else:
+        # fallback kalau template belum ada
+        lis = "\n".join([f'<li><a href="{n}">{t}</a></li>' for n, t in cards])
+        html = f"""<!doctype html>
 <html>
   <head><meta charset="utf-8"><title>Artikel Film</title></head>
   <body>
@@ -91,6 +99,6 @@ def build_index():
     <p><a href="../index.html">⬅ Kembali ke Home</a></p>
   </body>
 </html>"""
-    (POSTS_DIR / "index.html").write_text(html, encoding="utf-8")
+        template_path.write_text(html, encoding="utf-8")
 
 build_index()
