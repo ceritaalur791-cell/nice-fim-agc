@@ -1,19 +1,49 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Nice Film</title>
-  </head>
-  <body>
-    <!-- Navigasi -->
-    <nav>
-      <a href="index.html">Home</a> |
-      <a href="about.html">Tentang</a> |
-      <a href="posts/index.html">Artikel</a>
-    </nav>
+<head>
+  <meta charset="utf-8">
+  <title>Nice Film</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background: #1e1e1e; color: white; padding: 15px; text-align: center; }
+    nav { margin: 0; padding: 10px; background: #333; text-align: center; }
+    nav a { color: white; margin: 0 10px; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 20px auto; padding: 20px; }
+    h1 { color: #222; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+    .card { background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); overflow: hidden; transition: transform .2s; }
+    .card:hover { transform: translateY(-5px); }
+    .card img { width: 100%; height: 180px; object-fit: cover; }
+    .card h2 { font-size: 16px; padding: 10px; color: #007bff; }
+    .card a { text-decoration: none; }
+    .card a:hover h2 { text-decoration: underline; }
+    footer { background: #1e1e1e; color: white; text-align: center; padding: 10px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎬 Nice Film</h1>
+    <p>Update berita & artikel film terbaru secara otomatis</p>
+  </header>
 
-    <h1>Nice Film</h1>
-    <p>Selamat 🎬! GitHub Pages kamu sudah aktif.</p>
-    <p>Silakan klik menu <b>Artikel</b> untuk membaca update film terbaru.</p>
-  </body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">Tentang</a>
+    <a href="posts/index.html">Artikel</a>
+  </nav>
+
+  <div class="container">
+    <h1>Artikel Terbaru</h1>
+    <div class="grid">
+      <!-- SCRIPT AKAN AUTO ISI 3 ARTIKEL TERBARU -->
+      {{LATEST_POSTS}}
+    </div>
+    <p style="margin-top:20px;"><a href="posts/index.html">📂 Lihat Semua Artikel</a></p>
+  </div>
+
+  <footer>
+    &copy; 2025 Nice Film — Auto Generated Content via GitHub Actions
+  </footer>
+</body>
 </html>
